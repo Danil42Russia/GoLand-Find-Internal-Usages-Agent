@@ -1,0 +1,45 @@
+plugins {
+    id "java"
+}
+
+group = "ru.danil42russia"
+version = "1.0.0"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.javassist:javassist:3.30.2-GA"
+}
+
+wrapper {
+    gradleVersion = "8.7"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "src"
+        }
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+                "Premain-Class": "ru.danil42russia.agent.GoLandAgent",
+                "Can-Redefine-Classes": "true",
+                "Can-Retransform-Classes": "true",
+        )
+    }
+
+    from {
+        configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
